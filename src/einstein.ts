@@ -4,12 +4,17 @@ import * as util from 'util';
 
 // Tutte le proprietà, manca solo la posizione della casa ma quella non la faremo comparire come proprietà, ma come posizione
 // della casa nell'array della soluzione.
-const coloriArray = ["giall", "rossa", "bluee", "verde", "bianc"] as const;
-type Colore = typeof coloriArray[number];
-// const COLORI = {
-//   GIALLA: "giall",
-//   ROSSA: "rossa"
-// } as const;
+// const coloriArray = ["giall", "rossa", "bluee", "verde", "bianc"] as const;
+// type Colore = typeof coloriArray[number];
+const COL = {
+  GIALLA: "giall",
+  ROSSA: "rossa",
+  BLUE: "bluee",
+  VERDE: "verde",
+  BIANCA: "bianc",
+} as const;
+type Colore = (typeof COL)[keyof typeof COL];
+const coloriArray: readonly Colore[] = Object.values(COL);
 const nazionalitaArray = ['svede', 'tedes', 'norve', 'ingle', 'danes'] as const;
 type Nazionalita = typeof nazionalitaArray[number];
 const bevandeArray = ['acqua', 'teaea', 'latte', 'caffé', 'birra'] as const;
@@ -22,9 +27,6 @@ type Animale = typeof animaliArray[number];
 
 //type ConfigCasa = { colore: Colore, nazionalita: Nazionalita, bevanda: Bevanda, sigaretta: Sigaretta, animale: Animale };
 type ConfigCasa = [Colore, Nazionalita, Bevanda, Sigaretta, Animale];
-
-type ConfigSolution = [ConfigCasa, ConfigCasa, ConfigCasa, ConfigCasa, ConfigCasa]
-
 
 // Provo a elencare tutte le configurazioni possibili di soluzione
 
@@ -62,14 +64,71 @@ function sottoSpazioVincoli_1_4_9_14(): [Colore[], Nazionalita[]][] {  // Questa
       const attualeNazioniPerm = nazioniPerm[j];
       const indexInglese = attualeNazioniPerm.findIndex(el => el === 'ingle');
       const indexNorvegese = attualeNazioniPerm.findIndex(el => el === 'norve');
-      const indexCasaBlu = attualeColorPerm.findIndex(el => el === 'bluee');
-      const indexCasaVerde = attualeColorPerm.findIndex(el => el === 'verde');
-      const indexCasaBianca = attualeColorPerm.findIndex(el => el === 'bianc');
-      if (attualeColorPerm[indexInglese] === 'rossa' && indexNorvegese === 0 && Math.abs(indexCasaBlu-indexNorvegese) === 1 &&
-        (indexCasaBianca - indexCasaVerde) === 1
-      ) {
+      const indexCasaBlu = attualeColorPerm.findIndex(el => el === COL.BLUE);
+      const indexCasaVerde = attualeColorPerm.findIndex(el => el === COL.VERDE);
+      const indexCasaBianca = attualeColorPerm.findIndex(el => el === COL.BIANCA);
+      if (attualeColorPerm[indexInglese] === COL.ROSSA && indexNorvegese === 0 && Math.abs(indexCasaBlu-indexNorvegese) === 1 &&
+        (indexCasaBianca - indexCasaVerde) === 1) {
         // TODO: possiamo anche provare (indexCasaBianca - indexCasaVerde) >= 1 -> soluzione/i diversa/e da quella solita!!
         sol[size] = [attualeColorPerm, attualeNazioniPerm];
+        size++;
+      };
+    };
+  };
+  // console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
+  // console.log(size);
+  return sol;
+};
+
+
+/** Questa funzione deve aggiungere elementi alle permutazioni e altre permutazioni, e filtrare */
+function vincolBevSiga(): [Colore[], Nazionalita[], Bevanda[], Sigaretta[]][] {
+  let sol: [Colore[], Nazionalita[], Bevanda[], Sigaretta[]][] = [];
+  let size = 0;
+  const tempSol: [Colore[], Nazionalita[]][] = sottoSpazioVincoli_1_4_9_14();
+  for (const s of tempSol) {
+    for (let i = 0; i < bevandePerm.length; i++) {
+      const attualeBevPerm = bevandePerm[i];
+      for (let j = 0; j < sigaPerm.length; j++) {
+        const attualeSigaPerm = sigaPerm[j];
+        const indexDanese = s[1].findIndex(el => el === 'danes');
+        const indexTedesco = s[1].findIndex(el => el === 'tedes')
+        const indexCasaVerde = s[0].findIndex(el => el === COL.VERDE);
+        const indexCasaGialla = s[0].findIndex(el => el === COL.GIALLA);
+        const indexBirra = attualeBevPerm.findIndex(el => el === 'birra');
+        const indexAcqua = attualeBevPerm.findIndex(el => el === 'acqua');
+        const indexBlend = attualeSigaPerm.findIndex(el => el === 'Blend');
+        if (attualeBevPerm[indexDanese] === 'teaea' && attualeSigaPerm[indexCasaGialla] === 'Dunhi' && attualeBevPerm[indexCasaVerde] === 'caffé' &&
+          attualeBevPerm[2] === 'latte' && attualeSigaPerm[indexBirra] === 'BluMa' && attualeSigaPerm[indexTedesco] === 'Princ' &&
+          // (attualeBevPerm[indexBlend - 1] === 'acqua' || attualeBevPerm[indexBlend + 1] === 'acqua') oppure
+          Math.abs(indexAcqua - indexBlend) === 1) {
+          sol[size] = [...s, attualeBevPerm, attualeSigaPerm];
+          size++;
+        };
+      };
+    };
+  };
+  // console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
+  // console.log(size);
+  return sol;
+};
+
+function lastVincoli(): [Colore[], Nazionalita[], Bevanda[], Sigaretta[], Animale[]][] {
+  let sol: [Colore[], Nazionalita[], Bevanda[], Sigaretta[], Animale[]][] = [];
+  let size = 0;
+  const tempSol = vincolBevSiga();
+  for (const s of tempSol) {
+    for (let i = 0; i < animaliPerm.length; i++) {
+      const attualeAnimaliPerm = animaliPerm[i];
+      const indexSvedese = s[1].findIndex(el => el === 'svede');
+      const indexPallMall = s[3].findIndex(el => el === 'PallM');
+      const indexBlends = s[3].findIndex(el => el === 'Blend');
+      const indexGatto = attualeAnimaliPerm.findIndex(el => el === 'gatto');
+      const indexDunhill = s[3].findIndex(el => el === 'Dunhi');
+      const indexCavallo = attualeAnimaliPerm.findIndex(el => el === 'caval');
+      if (attualeAnimaliPerm[indexSvedese] === 'canee' && attualeAnimaliPerm[indexPallMall] === 'uccel' &&
+        Math.abs(indexBlends - indexGatto) === 1 && Math.abs(indexDunhill - indexCavallo) === 1) {
+        sol[size] = [...s, attualeAnimaliPerm];
         size++;
       };
     };
@@ -78,48 +137,8 @@ function sottoSpazioVincoli_1_4_9_14(): [Colore[], Nazionalita[]][] {  // Questa
   console.log(size);
   return sol;
 };
-// ESECUZIONE
-let tempSol = sottoSpazioVincoli_1_4_9_14();
 
-/** Questa funzione deve aggiungere elementi alle permutazioni e altre permutazioni, e filtrare */
-function vincolBevSiga(tempSol: [Colore[], Nazionalita[]][]): [Colore[], Nazionalita[], Bevanda[], Sigaretta[]][] {
-  let sol: [Colore[], Nazionalita[], Bevanda[], Sigaretta[]][] = [];
-  let size = 0;
-  for (const s of tempSol) {
-    for (let i = 0; i < bevandePerm.length; i++) {
-      const attualeBevPerm = bevandePerm[i];
-      for (let j = 0; j < sigaPerm.length; j++) {
-        const attualeSigaPerm = sigaPerm[j];
-        const indexDanese = s[1].findIndex(el => el === 'danes');
-        const indexTedesco = s[1].findIndex(el => el === 'tedes')
-        const indexCasaVerde = s[0].findIndex(el => el === 'verde');
-        const indexCasaGialla = s[0].findIndex(el => el === 'giall');
-        const indexBirra = attualeBevPerm.findIndex(el => el === 'birra');
-        const indexAcqua = attualeBevPerm.findIndex(el => el === 'acqua');
-        const indexBlend = attualeSigaPerm.findIndex(el => el === 'Blend');
-        if (attualeBevPerm[indexDanese] === 'teaea' && attualeSigaPerm[indexCasaGialla] === 'Dunhi' && attualeBevPerm[indexCasaVerde] === 'caffé' &&
-          attualeBevPerm[2] === 'latte' && attualeSigaPerm[indexBirra] === 'BluMa' && attualeSigaPerm[indexTedesco] === 'Princ' &&
-          // (attualeBevPerm[indexBlend - 1] === 'acqua' || attualeBevPerm[indexBlend + 1] === 'acqua') oppure
-          Math.abs(indexAcqua - indexBlend) === 1
-        ) {
-          sol[size] = [...s, attualeBevPerm, attualeSigaPerm];
-          size++;
-        };
-      };
-    };
-  };
-  console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
-  console.log(size);
-  return sol;
-};
-
-let temp2Sol = vincolBevSiga(tempSol);
-
-// TODO: vincoli successivi? e creiamo le relative funzioni
-
-
-
-
+lastVincoli();
 
 
 
@@ -143,6 +162,20 @@ function createSottoSpazioSol() {
   return sol;
 };
 
+function oldCreateSottoSpazioSol() {
+  let sol: any[][][][] = [];
+  let size = 0;
+  for (let i = 0; i < colorPerm.length; i++) {
+    sol[i] = [];
+    for (let j = 0; j < nazioniPerm.length; j++){
+      sol[i][j] = [colorPerm[i], nazioniPerm[j]]
+      size++;
+    };
+  };
+  console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
+  console.log(size);
+};
+
 /** Da non utilizzare con più di 3 perms (array di permitazioni): Errore -> "JavaScript heap out of memory" */
 function createSpazioSol() {
   const u = performance.now();
@@ -159,25 +192,6 @@ function createSpazioSol() {
         //   };
         // };
       };
-    };
-  };
-  console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
-  console.log(size);
-};
-// ESECUZIONE
-// createSpazioSol();
-
-//////////////////////
-
-function oldCreateSpazioSol() {
-  let sol: any[][][][] = [];
-  let size = 0;
-  // let yy: [[Colore, Nazionalita], [Colore, Nazionalita], [Colore, Nazionalita], [Colore, Nazionalita], [Colore, Nazionalita]][];
-  for (let i = 0; i < colorPerm.length; i++) {
-    sol[i] = [];
-    for (let j = 0; j < nazioniPerm.length; j++){
-      sol[i][j] = [colorPerm[i], nazioniPerm[j]]
-      size++;
     };
   };
   console.log(util.inspect(sol, { showHidden: false, depth: null, colors: true }));
