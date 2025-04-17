@@ -1,0 +1,89 @@
+In una strada ci sono 5 case pitturate con 5 colori diversi.
+In ogni casa vive una persona di una diversa nazionalità.
+I 5 proprietari bevono bevande differenti, fumano una diversa marca di sigarette e possiedono ognuno un animale diverso.
+
+La domanda è:
+chi possiede il pesce?
+
+Usate questi dati per scoprirlo
+
+#  1. L'inglese vive in una casa rossa
+   2. Lo svedese possiede un cane
+   3. Il danese beve tea
+#  4. La casa verde è a sinistra di quella bianca
+   5. Il proprietario della casa verde beve caffè
+   6. La persona che fuma Pall Mall possiede un uccello
+   7. Il proprietario della casa gialla fuma Dunhill
+   8. L'uomo che vive nella casa in centro beve latte
+#  9. Il norvegese vive nella prima casa
+   10. L'uomo che fuma Blends vive vicino a quello che ha un gatto
+   11. L'uomo che possiede un cavallo vive vicino a quello che fuma Dunhill
+   12. L'uomo che fuma Blu Master beve birra
+   13. Il tedesco fuma Prince
+#  14. Il norvegese vive vicino a una casa blu
+   15. L'uomo che fuma Blends ha un vicino che beve acqua
+
+#############################################################################################
+
+Direi che prima possiamo creare lo spazio di tutte le soluzioni e poi provare a scremarle (a runtime ci metto anni e anni, da provare)
+esempio di elemento di spazio soluzione, cioè esempio di possibile soluzione, o soluzione detta "candidata":
+{
+  casa1: {
+    colore: gialla,
+    nazionalità: tedesco,
+    sigarette: Pall Mall
+    bevanda: acqua
+    animale: uccello
+  },
+  casa2: {
+    colore: rossa,
+    nazionalità: svedese,
+    sigarette: Prince
+    bevanda: birra
+    animale: cane
+  },
+  casa3: { ... },
+  casa4: { ... },
+  casa5: { ... }
+}
+Ne esistono tantissime come questa, credo siano 720 alla quinta (ovvero [(5!)^5] ).
+
+
+Poi provo a creare un sottospazio delle soluzioni, basato solo su alcune proprietà delle soluzioni, come posizione casa, colore casa e nazionalità individuo, e di volta applico dei vincoli basati su queste proprietà.
+Configurazione/soluzione fra tante del sottospazio:
+{
+  casa1: {
+    colore: rossa,
+    nazionalità: svedese,
+  },
+  casa2: { ... },
+  ...
+  casa5: { ... }
+}
+Ho tante possibili configurazioni ora ( (5!)^2 ) ridotte dai vincoli 1, 4, 9 , 14: (quante?)
+
+
+
+
+############################
+
+Vincoli fatti
+   1. L'inglese vive in una casa rossa
+   4. La casa verde è a sinistra di quella bianca
+   9. Il norvegese vive nella prima casa
+  14. Il norvegese vive vicino a una casa blu
+
+Vincoli TODO
+   3. Il danese beve tea
+   5. Il proprietario della casa verde beve caffè
+   7. Il proprietario della casa gialla fuma Dunhill
+   8. L'uomo che vive nella casa in centro beve latte
+  12. L'uomo che fuma Blu Master beve birra
+  13. Il tedesco fuma Prince
+  15. L'uomo che fuma Blends ha un vicino che beve acqua
+  
+Ultima tornata di vincoli
+   2. Lo svedese possiede un cane
+   6. La persona che fuma Pall Mall possiede un uccello
+  10. L'uomo che fuma Blends vive vicino a quello che ha un gatto
+  11. L'uomo che possiede un cavallo vive vicino a quello che fuma Dunhill
