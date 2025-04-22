@@ -87,3 +87,26 @@ Ultima tornata di vincoli
    6. La persona che fuma Pall Mall possiede un uccello
   10. L'uomo che fuma Blends vive vicino a quello che ha un gatto
   11. L'uomo che possiede un cavallo vive vicino a quello che fuma Dunhill
+
+
+// provo a far senza gli animali all'inizio -> ci si riesce ad arrivare ad una sola soluzione !! (soluzione di un sottospazio, ma sempre parte della soluzione è)
+// provo a indovinare i valori per esclusione
+
+   3. Il danese beve tea
+   12. L'uomo che fuma Blu Master beve birra
+   13. Il tedesco fuma Prince
+
+-   2. Lo svedese possiede un cane
+-   6. La persona che fuma Pall Mall possiede un uccello
+-   10. L'uomo che fuma Blends vive vicino a quello che ha un gatto
+-   11. L'uomo che possiede un cavallo vive vicino a quello che fuma Dunhill
+
+
+1. L'inglese vive in una casa rossa
+8. L'uomo che vive nella casa in centro beve latte
+9. Il norvegese vive nella prima casa
+14. Il norvegese vive vicino a una casa blu
+4. La casa verde è a sinistra di quella bianca
+5. Il proprietario della casa verde beve caffè
+7. Il proprietario della casa gialla fuma Dunhill
+15. L'uomo che fuma Blends ha un vicino che beve acqua

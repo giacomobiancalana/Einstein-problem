@@ -2,7 +2,7 @@
   "name": "einstein-2025",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "einstein.js",
   "scripts": {
     "start": "clear && tsc && node dist/einstein.js",
     "test": "echo \"Error: no test specified\" && exit 1"

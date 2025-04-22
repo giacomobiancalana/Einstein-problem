@@ -1,11 +1,11 @@
 import * as util from 'util';
 //const util = require('util');
+
+
 // Problema di Einstein
 
 // Tutte le proprietà, manca solo la posizione della casa ma quella non la faremo comparire come proprietà, ma come posizione
-// della casa nell'array della soluzione.
-// const coloriArray = ["giall", "rossa", "bluee", "verde", "bianc"] as const;
-// type Colore = typeof coloriArray[number];
+// dell'elemento nell'array della soluzione.
 const COL = {
   GIALLA: "giall",
   ROSSA: "rossa",
@@ -15,20 +15,50 @@ const COL = {
 } as const;
 type Colore = (typeof COL)[keyof typeof COL];
 const coloriArray: readonly Colore[] = Object.values(COL);
-const nazionalitaArray = ['svede', 'tedes', 'norve', 'ingle', 'danes'] as const;
-type Nazionalita = typeof nazionalitaArray[number];
-const bevandeArray = ['acqua', 'teaea', 'latte', 'caffé', 'birra'] as const;
-type Bevanda = typeof bevandeArray[number];
-const sigaretteArray = ['Dunhi', 'Blend', 'PallM', 'Princ', 'BluMa'] as const;
-type Sigaretta = typeof sigaretteArray[number];
+
+const NAZ = {
+  SVEDESE: "svede",
+  TEDESCA: "tedes",
+  NORVEGESE: "norve",
+  INGLESE: "ingle",
+  DANESE: "danes",
+} as const;
+type Nazionalita = (typeof NAZ)[keyof typeof NAZ];
+const nazionalitaArray: readonly Nazionalita[] = Object.values(NAZ);
+
+const BEV = {
+  ACQUA: "acqua",
+  TEA: "teaea",
+  LATTE: "latte",
+  CAFFE: "caffé",
+  BIRRA: "birra",
+} as const;
+type Bevanda = (typeof BEV)[keyof typeof BEV];;
+const bevandeArray: readonly Bevanda[] = Object.values(BEV);
+
+const SIG = {
+  DUNHILL: "Dunhi",
+  BLENDS: "Blend",
+  PALL_MALL: "PallM",
+  PRINCE: "Princ",
+  BLU_MASTER: "BluMa",
+} as const;
+type Sigaretta = (typeof SIG)[keyof typeof SIG];
+const sigaretteArray: readonly Sigaretta[] = Object.values(SIG);
+
+const ANIM = {
+  GATTO: "gatto",
+  CAVALLO: "caval",
+  UCCELLO: "uccel",
+  PESCE: "pesce",
+  CANE: "canee",
+} as const;
+type Animale = (typeof ANIM)[keyof typeof ANIM];
 const animaliArray = ['gatto', 'caval', 'uccel', 'pesce', 'canee'] as const;
-type Animale = typeof animaliArray[number];
-// PAROLE SCRITTE COSI' PER FARLE TUTTE A 5 CARATTERI: SI VISUALIZZANO MEGLIO COSI'
+
 
 //type ConfigCasa = { colore: Colore, nazionalita: Nazionalita, bevanda: Bevanda, sigaretta: Sigaretta, animale: Animale };
 type ConfigCasa = [Colore, Nazionalita, Bevanda, Sigaretta, Animale];
-
-// Provo a elencare tutte le configurazioni possibili di soluzione
 
 /** Restituisce tutte le possibili permutazioni di un array. */
 function permLoop<T extends string>(arr: T[]): T[][] {  // accum è un insieme di permutazioni
@@ -62,14 +92,14 @@ function sottoSpazioVincoli_1_4_9_14(): [Colore[], Nazionalita[]][] {  // Questa
     const attualeColorPerm = colorPerm[i];
     for (let j = 0; j < nazioniPerm.length; j++){
       const attualeNazioniPerm = nazioniPerm[j];
-      const indexInglese = attualeNazioniPerm.findIndex(el => el === 'ingle');
-      const indexNorvegese = attualeNazioniPerm.findIndex(el => el === 'norve');
+      const indexInglese = attualeNazioniPerm.findIndex(el => el === NAZ.INGLESE);
+      const indexNorvegese = attualeNazioniPerm.findIndex(el => el === NAZ.NORVEGESE);
       const indexCasaBlu = attualeColorPerm.findIndex(el => el === COL.BLUE);
       const indexCasaVerde = attualeColorPerm.findIndex(el => el === COL.VERDE);
       const indexCasaBianca = attualeColorPerm.findIndex(el => el === COL.BIANCA);
       if (attualeColorPerm[indexInglese] === COL.ROSSA && indexNorvegese === 0 && Math.abs(indexCasaBlu-indexNorvegese) === 1 &&
         (indexCasaBianca - indexCasaVerde) === 1) {
-        // TODO: possiamo anche provare (indexCasaBianca - indexCasaVerde) >= 1 -> soluzione/i diversa/e da quella solita!!
+        // Possiamo anche provare (indexCasaBianca - indexCasaVerde) >= 1 -> soluzione/i diversa/e da quella solita!!
         sol[size] = [attualeColorPerm, attualeNazioniPerm];
         size++;
       };
@@ -91,16 +121,16 @@ function vincolBevSiga(): [Colore[], Nazionalita[], Bevanda[], Sigaretta[]][] {
       const attualeBevPerm = bevandePerm[i];
       for (let j = 0; j < sigaPerm.length; j++) {
         const attualeSigaPerm = sigaPerm[j];
-        const indexDanese = s[1].findIndex(el => el === 'danes');
-        const indexTedesco = s[1].findIndex(el => el === 'tedes')
+        const indexDanese = s[1].findIndex(el => el === NAZ.DANESE);
+        const indexTedesco = s[1].findIndex(el => el === NAZ.TEDESCA)
         const indexCasaVerde = s[0].findIndex(el => el === COL.VERDE);
         const indexCasaGialla = s[0].findIndex(el => el === COL.GIALLA);
-        const indexBirra = attualeBevPerm.findIndex(el => el === 'birra');
-        const indexAcqua = attualeBevPerm.findIndex(el => el === 'acqua');
-        const indexBlend = attualeSigaPerm.findIndex(el => el === 'Blend');
-        if (attualeBevPerm[indexDanese] === 'teaea' && attualeSigaPerm[indexCasaGialla] === 'Dunhi' && attualeBevPerm[indexCasaVerde] === 'caffé' &&
-          attualeBevPerm[2] === 'latte' && attualeSigaPerm[indexBirra] === 'BluMa' && attualeSigaPerm[indexTedesco] === 'Princ' &&
-          // (attualeBevPerm[indexBlend - 1] === 'acqua' || attualeBevPerm[indexBlend + 1] === 'acqua') oppure
+        const indexBirra = attualeBevPerm.findIndex(el => el === BEV.BIRRA);
+        const indexAcqua = attualeBevPerm.findIndex(el => el === BEV.ACQUA);
+        const indexBlend = attualeSigaPerm.findIndex(el => el === SIG.BLENDS);
+        if (attualeBevPerm[indexDanese] === BEV.TEA && attualeSigaPerm[indexCasaGialla] === SIG.DUNHILL && attualeBevPerm[indexCasaVerde] === BEV.CAFFE &&
+          attualeBevPerm[2] === BEV.LATTE && attualeSigaPerm[indexBirra] === SIG.BLU_MASTER && attualeSigaPerm[indexTedesco] === SIG.PRINCE &&
+          // (attualeBevPerm[indexBlend - 1] === BEV.ACQUA || attualeBevPerm[indexBlend + 1] === BEV.ACQUA) oppure
           Math.abs(indexAcqua - indexBlend) === 1) {
           sol[size] = [...s, attualeBevPerm, attualeSigaPerm];
           size++;
@@ -120,13 +150,13 @@ function lastVincoli(): [Colore[], Nazionalita[], Bevanda[], Sigaretta[], Animal
   for (const s of tempSol) {
     for (let i = 0; i < animaliPerm.length; i++) {
       const attualeAnimaliPerm = animaliPerm[i];
-      const indexSvedese = s[1].findIndex(el => el === 'svede');
-      const indexPallMall = s[3].findIndex(el => el === 'PallM');
-      const indexBlends = s[3].findIndex(el => el === 'Blend');
-      const indexGatto = attualeAnimaliPerm.findIndex(el => el === 'gatto');
-      const indexDunhill = s[3].findIndex(el => el === 'Dunhi');
-      const indexCavallo = attualeAnimaliPerm.findIndex(el => el === 'caval');
-      if (attualeAnimaliPerm[indexSvedese] === 'canee' && attualeAnimaliPerm[indexPallMall] === 'uccel' &&
+      const indexSvedese = s[1].findIndex(el => el === NAZ.SVEDESE);
+      const indexPallMall = s[3].findIndex(el => el === SIG.PALL_MALL);
+      const indexBlends = s[3].findIndex(el => el === SIG.BLENDS);
+      const indexGatto = attualeAnimaliPerm.findIndex(el => el === ANIM.GATTO);
+      const indexDunhill = s[3].findIndex(el => el === SIG.DUNHILL);
+      const indexCavallo = attualeAnimaliPerm.findIndex(el => el === ANIM.CAVALLO);
+      if (attualeAnimaliPerm[indexSvedese] === ANIM.CANE && attualeAnimaliPerm[indexPallMall] === ANIM.UCCELLO &&
         Math.abs(indexBlends - indexGatto) === 1 && Math.abs(indexDunhill - indexCavallo) === 1) {
         sol[size] = [...s, attualeAnimaliPerm];
         size++;
@@ -216,6 +246,7 @@ function oldCreateSpazioSolDiversaVisual() {
   console.log(size);
 };
 
+/** Provo a elencare tutte le configurazioni possibili di soluzione */
 function computePossibiliCase() {
   let possibiliCase: ConfigCasa[] = [];
   let numPossibiliCase = 0;
